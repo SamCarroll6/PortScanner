@@ -1,7 +1,10 @@
 #include "ps.h"
 
-int portscan(char *IPadd)
+double portscan(char *IPadd)
 {
+    // Time structs to check runtime
+    struct timeval t1,t2;
+    double runtime = 0;
     // sockfd returns the integer value to represent the open socket
     int sockfd = 0;
     // Variable will be used to see if a connection is established or not
@@ -10,6 +13,7 @@ int portscan(char *IPadd)
     struct sockaddr_in sk_addr;
 
     int port = 1;
+    gettimeofday(&t1,NULL);
     for(port; port <= 65535; port++)
     {
         if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
@@ -36,7 +40,11 @@ int portscan(char *IPadd)
         }
         close(sockfd); 
     }
-    return 0;
+    gettimeofday(&t2,NULL);
+
+    runtime = (t2.tv_sec-t1.tv_sec)*1000 + (double)(t2.tv_usec-t1.tv_usec)/1000;
+
+    return runtime;
 
     
 }
