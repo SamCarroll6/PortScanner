@@ -26,8 +26,7 @@ int main(int argc, char* argv[])
     char IPadd[16] = {'\0'};
     strcpy(IPadd, argv[1]);
     printf("Rank=%d of %d %s\n", rank, p, IPadd);
-
     time = portscan(IPadd, p, rank);
     printf("Rank %d time: %lf milliseconds\n", rank, time);
-    return 0;
+    MPI_Finalize();
 }

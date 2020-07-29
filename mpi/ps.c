@@ -16,11 +16,14 @@ double portscan(char *IPadd, int p, int rank)
     {
         start = 1;
         end = (int)65535/p + (65535 % p);
+        // end = (int)1000/p + (1000 % p);
     }
     else
     {
         start = ((int)65535/p) * rank + (65535 % p) + 1;
         end = ((int)65535/p) * (rank + 1) + (65535 % p);
+        // start = ((int)1000/p) * rank + (1000 % p) + 1;
+        // end = ((int)1000/p) * (rank + 1) + (1000 % p);
     }
     int port = start;
     gettimeofday(&t1,NULL);
@@ -53,7 +56,6 @@ double portscan(char *IPadd, int p, int rank)
     gettimeofday(&t2,NULL);
 
     runtime = (t2.tv_sec-t1.tv_sec)*1000 + (double)(t2.tv_usec-t1.tv_usec)/1000;
-
     return runtime;
 
     
