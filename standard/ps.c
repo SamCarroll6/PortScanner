@@ -16,6 +16,7 @@ double portscan(char *IPadd)
     gettimeofday(&t1,NULL);
     for(port; port <= 65535; port++)
     {
+        //printf("In\n");
         if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
         {
             printf("%d\n", port);
@@ -26,6 +27,7 @@ double portscan(char *IPadd)
         sk_addr.sin_addr.s_addr = inet_addr(IPadd);
         sk_addr.sin_family = AF_INET;
         sk_addr.sin_port = htons(port);
+        //printf("Conn check\n");
         connectcheck = connect(sockfd, (struct sockaddr*)&sk_addr, sizeof(sk_addr));
 
         //printf("Port = %d\n", ntohs(sk_addr.sin_port));

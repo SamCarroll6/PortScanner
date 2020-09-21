@@ -6,6 +6,8 @@
 #include <mpi.h>
 #include <sys/time.h>
 #include <time.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
 
 #ifndef PS_H
 #define PS_H
