@@ -14,11 +14,6 @@
 #include <assert.h>
 #include <netdb.h>
 
-// These define checking what type of value was passed.
-#define uk 0
-#define ip 1
-#define hn 2
-
 // These will define the type of ip address returned. 
 #define v4 1
 #define v6 2

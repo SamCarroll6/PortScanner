@@ -8,77 +8,57 @@ int main(int argc, char* argv[])
 //     strcpy(hold , (char*)host->h_addr);
 //     printf("%s\n", hold);
 	struct addrinfo VC, *res;
+	struct sockaddr_in *ipaddr;
+	struct sockaddr_in6 *ipaddr6;
+	char *printip;
 	int ret, ipcheck;
-	
+
 	assert(argc > 1);
-	/* 
-	 * Check to resolve if ip address provided or if hostname was provided.
-	 * Do this by checking the first byte of the provided string
- 	 */
-	if(argv[1][0] > 48 && argv[1][0] < 58)
+
+	memset(&VC, '\0', sizeof VC);
+	VC.ai_family = PF_UNSPEC;
+	VC.ai_socktype = SOCK_STREAM;
+
+	ret = getaddrinfo(argv[1], "http", &VC, &res);
+	if(ret)
 	{
-		ipcheck = ip;
-
-
-		memset(&VC, '\0', sizeof VC);
-		VC.ai_family = PF_UNSPEC;
-		VC.ai_flags = AI_NUMERICHOST;
-
-		ret = getaddrinfo(argv[1], NULL, &VC, &res);
-		if(ret)
-		{
-			printf("Error: Must include valid hostname or ip address\n");
-			exit(1);
-		}
-
-		if(res->ai_family == AF_INET)
-		{
-			resip = v4;
-			printf("ipv4\n");
-		}
-		else if(res->ai_family == AF_INET6)
-		{
-			resip = v6;
-			printf("ipv6\n");
-		}
-		else
-		{
-			printf("Error: Ip address neither ipv4 or ipv6\n");
-			exit(1);
-		}
-	
-	}	 
-	else if((argv[1][0] >= 65 && argv[1][0] <= 90) || (argv[1][0] >= 97 && argv[1][0] <= 122)) 
-	{
-		ipcheck = hn;
-	}
-	else
-	{
-		ipcheck = uk;
 		printf("Error: Must include valid hostname or ip address\n");
 		exit(1);
 	}
 
-	switch(ipcheck)
+	if(res->ai_family == AF_INET)
 	{
-		case ip: printf("Value is an ip address\n");
-				 break;
-		case hn: printf("Value is a hostname\n");
-				 break;
+		resip = v4;
+		printf("ipv4\n");
 	}
-
-
-
-	// struct hostent *host;
-	// int err, i , sock ,start , end;
-	// char hostname[100];
-	// struct sockaddr_in sa;
-
-	// //Initialise the sockaddr_in structure
-	// strncpy((char*)&sa , "" , sizeof sa);
-	// sa.sin_family = AF_INET;
+	else if(res->ai_family == AF_INET6)
+	{
+		resip = v6;
+		printf("ipv6\n");
+	}
+	else
+	{
+		printf("Error: Invalid entry\n");
+		exit(1);
+	}
 	
-	// printf("Doing inet_addr...");
-	// printf("%d\n", inet_pton(AF_INET, argv[1], sa.sin_addr.s_addr));
-	// printf("Done\n");
+	
+	/*
+	 * Below it will convert the sock_addr returned by getaddrinfo
+	 * back into an ip address string, this lets me see that it is
+	 * correctly handling the hostname resolution by ensuring that an
+	 * ip address is being returned. 
+	 */
+	if(resip == v4)
+	{
+		ipaddr = (struct sockaddr_in*)res->ai_addr;
+		printip = inet_ntoa(ipaddr->sin_addr);
+		printf("%s\n", printip);
+	}
+	else if(resip == v6)
+	{
+		ipaddr6 = (struct sockaddr_in6*)res->ai_addr;
+		inet_ntop(AF_INET6, &ipaddr6->sin6_addr, printip, 128);
+		printf("%s\n", printip);
+	}
 }
