@@ -1,12 +1,17 @@
+/*
+ * The start of my current project, this resolves a hostname or ip address
+ * provided by the user and returns the sockaddr_in with the relevant ip address.
+ * My further plan is to use the ip that is retrieved and run a port scan on that ip.
+ * I also plan to look at incorporating threading into this project once the port scan
+ * is active as a way to boost the overall performance. For this I plan to use MPI for my 
+ * implementation. You can see an early outline of this idea on my github at:
+ * 			https://github.com/SamCarroll6/PortScanner/tree/master/mpi
+ */
+
 #include "hold.h" 
 
 int main(int argc, char* argv[])
 {
-//     struct hostent *host; 
-//     char *hold; 
-//     host = gethostbyname(argv[1]);
-//     strcpy(hold , (char*)host->h_addr);
-//     printf("%s\n", hold);
 	struct addrinfo VC, *res;
 	struct sockaddr_in *ipaddr;
 	struct sockaddr_in6 *ipaddr6;
@@ -25,22 +30,6 @@ int main(int argc, char* argv[])
 		printf("Error: Must include valid hostname or ip address\n");
 		exit(1);
 	}
-
-	if(res->ai_family == AF_INET)
-	{
-		resip = v4;
-		printf("ipv4\n");
-	}
-	else if(res->ai_family == AF_INET6)
-	{
-		resip = v6;
-		printf("ipv6\n");
-	}
-	else
-	{
-		printf("Error: Invalid entry\n");
-		exit(1);
-	}
 	
 	
 	/*
@@ -49,16 +38,23 @@ int main(int argc, char* argv[])
 	 * correctly handling the hostname resolution by ensuring that an
 	 * ip address is being returned. 
 	 */
-	if(resip == v4)
+	if(res->ai_family == AF_INET)
 	{
 		ipaddr = (struct sockaddr_in*)res->ai_addr;
 		printip = inet_ntoa(ipaddr->sin_addr);
+		printf("ipv4\n");
 		printf("%s\n", printip);
 	}
-	else if(resip == v6)
+	else if(res->ai_family == AF_INET6)
 	{
 		ipaddr6 = (struct sockaddr_in6*)res->ai_addr;
 		inet_ntop(AF_INET6, &ipaddr6->sin6_addr, printip, 128);
+		printf("ipv6\n");
 		printf("%s\n", printip);
+	}
+	else
+	{
+		printf("Error: Invalid entry\n");
+		exit(1);
 	}
 }
