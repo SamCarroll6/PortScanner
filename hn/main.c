@@ -10,6 +10,7 @@
 
 #include "hold.h" 
 
+
 int main(int argc, char* argv[])
 {
 	struct addrinfo VC, *res;
@@ -57,4 +58,27 @@ int main(int argc, char* argv[])
 		printf("Error: Invalid entry\n");
 		exit(1);
 	}
+	portscan(printip, res->ai_family);
+}
+
+int portscan(char * printip, int ipv)
+{
+	int fd = 0;
+
+	if(ipv == AF_INET)
+	{
+		fd = socket(PF_INET, SOCK_STREAM, 0);
+	}
+	else if(ipv == AF_INET6)
+	{
+		fd = socket(PF_INET6, SOCK_STREAM, 0);
+	}
+	else
+	{
+		// Handled this in the main function technically
+		// but it felt incomplete without an else.
+		printf("Unable to open socket: Invalid IP Address\n");
+		exit(1);
+	}
+	return 0;
 }

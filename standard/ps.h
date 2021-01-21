@@ -8,6 +8,8 @@
 #include <time.h>
 #include <sys/ioctl.h>
 #include <net/if.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #ifndef PS_H
 #define PS_H

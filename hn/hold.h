@@ -13,3 +13,7 @@
 #include <unistd.h>
 #include <assert.h>
 #include <netdb.h>
+#include <sys/types.h> 
+#include <sys/socket.h>
+
+int portscan(char * printip, int ipv);
